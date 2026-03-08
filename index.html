@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Puedo tomar esto con esto?</title>
+
+  <!-- ===== FUENTES ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================
+       VARIABLES & RESET
+       ===================================================== */
+    :root {
+      --bg:        #F5F2ED;
+      --surface:   #FFFFFF;
+      --border:    #E2DDD6;
+      --text:      #1A1714;
+      --muted:     #7A746C;
+      --accent:    #2D5A4E;       /* verde botánico */
+      --accent-lt: #E8F0EE;
+      --warn:      #C05C2A;       /* ámbar-rojo */
+      --warn-lt:   #FAEEE6;
+      --ok:        #2D5A4E;
+      --ok-lt:     #E8F0EE;
+      --caution:   #8A6A1F;
+      --caution-lt:#FBF4E4;
+      --radius:    14px;
+      --shadow:    0 4px 24px rgba(26,23,20,.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+    header {
+      background: var(--accent);
+      padding: 52px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decoración orgánica de fondo */
+    header::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse 70% 60% at 80% 30%, rgba(255,255,255,.07) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 80% at 10% 80%, rgba(255,255,255,.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      color: #fff;
+      line-height: 1.1;
+      position: relative;
+    }
+
+    header h1 em {
+      font-style: italic;
+      color: #A8CBBF;
+    }
+
+    header p.subtitle {
+      margin-top: 12px;
+      font-size: .95rem;
+      color: rgba(255,255,255,.72);
+      font-weight: 300;
+      position: relative;
+    }
+
+    /* =====================================================
+       CONTENEDOR PRINCIPAL
+       ===================================================== */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* =====================================================
+       CARD DE ENTRADA
+       ===================================================== */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      margin-top: -28px;     /* sube sobre el header */
+      position: relative;
+      z-index: 10;
+      border: 1px solid var(--border);
+    }
+
+    .card label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* =====================================================
+       ÁREA DE TAGS / CHIPS
+       ===================================================== */
+    #tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      min-height: 52px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: text;
+      transition: border-color .2s;
+      background: var(--bg);
+    }
+
+    #tag-container:focus-within {
+      border-color: var(--accent);
+      background: #fff;
+    }
+
+    /* Chip de sustancia */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-lt);
+      color: var(--accent);
+      font-size: .85rem;
+      font-weight: 500;
+      padding: 4px 10px 4px 12px;
+      border-radius: 100px;
+      animation: popIn .18s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(.85); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0 2px;
+      opacity: .6;
+      transition: opacity .15s;
+    }
+    .tag button:hover { opacity: 1; }
+
+    /* Input invisible dentro del contenedor */
+    #tag-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: .95rem;
+      color: var(--text);
+      min-width: 140px;
+      flex: 1;
+    }
+
+    #tag-input::placeholder { color: var(--muted); }
+
+    /* Sugerencias autocomplete */
+    #suggestions {
+      position: absolute;
+      left: 0; right: 0;
+      top: calc(100% + 4px);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      overflow: hidden;
+      display: none;
+    }
+
+    #suggestions.visible { display: block; }
+
+    .suggestion-item {
+      padding: 10px 16px;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .suggestion-item:hover,
+    .suggestion-item.active { background: var(--accent-lt); color: var(--accent); }
+
+    .input-wrapper { position: relative; }
+
+    /* Hint debajo del input */
+    .input-hint {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* =====================================================
+       BOTÓN ANALIZAR
+       ===================================================== */
+    #btn-analyze {
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .03em;
+      transition: background .2s, transform .1s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(45,90,78,.25);
+    }
+
+    #btn-analyze:hover {
+      background: #234d43;
+      box-shadow: 0 6px 24px rgba(45,90,78,.35);
+    }
+
+    #btn-analyze:active { transform: scale(.98); }
+
+    #btn-analyze:disabled {
+      background: var(--border);
+      color: var(--muted);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* =====================================================
+       LOADER
+       ===================================================== */
+    #loader {
+      display: none;
+      text-align: center;
+      padding: 40px 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* =====================================================
+       SECCIÓN DE RESULTADOS
+       ===================================================== */
+    #results {
+      display: none;
+      margin-top: 24px;
+      animation: fadeUp .3s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Resumen de nivel general */
+    .result-summary {
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border: 1.5px solid transparent;
+    }
+
+    .result-summary.safe {
+      background: var(--ok-lt);
+      border-color: rgba(45,90,78,.2);
+    }
+    .result-summary.caution {
+      background: var(--caution-lt);
+      border-color: rgba(138,106,31,.2);
+    }
+    .result-summary.danger {
+      background: var(--warn-lt);
+      border-color: rgba(192,92,42,.2);
+    }
+
+    .summary-icon { font-size: 2rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+
+    .summary-text h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+
+    .summary-text p { font-size: .9rem; color: var(--muted); line-height: 1.5; }
+
+    /* Tarjeta de interacción */
+    .interaction-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .interaction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .interaction-pair {
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: .8rem;
+      font-weight: 500;
+    }
+
+    /* Badges de nivel */
+    .badge-evidence {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .badge-evidence.alto    { background: #fee2e2; color: #b91c1c; }
+    .badge-evidence.medio   { background: var(--caution-lt); color: var(--caution); }
+    .badge-evidence.bajo    { background: var(--accent-lt); color: var(--accent); }
+
+    /* Secciones internas de la tarjeta */
+    .detail-section {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .detail-section:first-of-type { margin-top: 0; border-top: none; }
+
+    .detail-label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .detail-text {
+      font-size: .9rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    /* Ícono de riesgo en el pair */
+    .risk-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .risk-dot.danger  { background: var(--warn); }
+    .risk-dot.caution { background: #D4A017; }
+    .risk-dot.safe    { background: var(--ok); }
+
+    /* =====================================================
+       MENSAJE "SIN INTERACCIONES"
+       ===================================================== */
+    .no-interaction {
+      background: var(--ok-lt);
+      border: 1.5px solid rgba(45,90,78,.2);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-align: center;
+    }
+
+    .no-interaction p { font-size: .95rem; color: var(--accent); }
+
+    /* =====================================================
+       DISCLAIMER ROBUSTO
+       ===================================================== */
+    .disclaimer-box {
+      margin-top: 28px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1.5px solid #e2c9c9;
+    }
+
+    .disclaimer-header {
+      background: #fdf2f2;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1.5px solid #e2c9c9;
+    }
+
+    .disclaimer-header strong {
+      font-size: .85rem;
+      color: #8B2020;
+      letter-spacing: .03em;
+    }
+
+    .disclaimer-body {
+      background: #fff9f9;
+      padding: 16px 20px;
+    }
+
+    .disclaimer-body p {
+      font-size: .8rem;
+      color: #5a3a3a;
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .disclaimer-body p:last-child { margin-bottom: 0; }
+
+    .disclaimer-body strong { color: #8B2020; }
+
+    /* =====================================================
+       SECCIÓN ACERCA DE
+       ===================================================== */
+    .about-section {
+      margin-top: 16px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .about-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 16px 20px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: background .15s;
+    }
+
+    .about-toggle:hover { background: var(--bg); }
+
+    .about-toggle .arrow {
+      transition: transform .25s;
+      font-size: .7rem;
+    }
+
+    .about-toggle.open .arrow { transform: rotate(180deg); }
+
+    .about-content {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1.5px solid var(--border);
+    }
+
+    .about-content.visible { display: block; }
+
+    .about-content p {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 14px;
+    }
+
+    /* =====================================================
+       SECCIÓN FUENTES
+       ===================================================== */
+    .sources-section {
+      margin-top: 16px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .sources-content {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1.5px solid var(--border);
+    }
+
+    .sources-content.visible { display: block; }
+
+    .source-item {
+      margin-top: 12px;
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 14px;
+      border-left: 3px solid var(--accent-lt);
+    }
+
+    .source-item strong {
+      display: block;
+      color: var(--text);
+      font-size: .83rem;
+      margin-bottom: 2px;
+    }
+
+    .source-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: .78rem;
+      word-break: break-all;
+    }
+
+    .source-item a:hover { text-decoration: underline; }
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+    .site-footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: .75rem;
+      color: var(--muted);
+      padding-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    /* =====================================================
+       EJEMPLOS RÁPIDOS
+       ===================================================== */
+    .quick-examples {
+      margin-top: 16px;
+    }
+
+    .quick-examples p {
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .example-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .example-chip {
+      font-size: .8rem;
+      padding: 6px 12px;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color .15s, background .15s, color .15s;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .example-chip:hover {
+      border-color: var(--accent);
+      background: var(--accent-lt);
+      color: var(--accent);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+    @media (max-width: 480px) {
+      header { padding: 44px 16px 36px; }
+      .card  { padding: 22px 16px; }
+      .interaction-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== CABECERA ===== -->
+  <header>
+    <h1>¿Puedo tomar <em>esto</em><br>con <em>esto</em>?</h1>
+    <p class="subtitle">Comprobador de interacciones entre suplementos y medicamentos</p>
+  </header>
+
+  <main>
+
+    <!-- ===== TARJETA DE BÚSQUEDA ===== -->
+    <div class="card">
+      <label for="tag-input">Ingresá las sustancias a combinar</label>
+
+      <!-- Wrapper para posicionar el dropdown de sugerencias -->
+      <div class="input-wrapper">
+        <!-- Contenedor de chips + input -->
+        <div id="tag-container" onclick="document.getElementById('tag-input').focus()">
+          <!-- Los chips (tags) se insertan aquí dinámicamente -->
+          <input
+            type="text"
+            id="tag-input"
+            placeholder="Escribí y presioná Enter o coma…"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <!-- Dropdown de sugerencias -->
+        <div id="suggestions"></div>
+      </div>
+
+      <p class="input-hint">Agregá al menos 2 sustancias para analizar la combinación.</p>
+
+      <!-- Ejemplos rápidos clickeables -->
+      <div class="quick-examples">
+        <p>Ejemplos rápidos</p>
+        <div class="example-chips">
+          <button class="example-chip" onclick="loadExample(['creatina','cafeína'])">Creatina + Cafeína</button>
+          <button class="example-chip" onclick="loadExample(['melatonina','magnesio'])">Melatonina + Magnesio</button>
+          <button class="example-chip" onclick="loadExample(['ibuprofeno','paracetamol'])">Ibuprofeno + Paracetamol</button>
+          <button class="example-chip" onclick="loadExample(['sertralina','melatonina'])">Sertralina + Melatonina</button>
+          <button class="example-chip" onclick="loadExample(['omega3','vitamina d','zinc'])">Omega3 + Vit. D + Zinc</button>
+        </div>
+      </div>
+
+      <!-- Botón principal -->
+      <button id="btn-analyze" disabled onclick="analyzeInteractions()">
+        Analizar combinación
+      </button>
+    </div>
+
+    <!-- ===== LOADER ===== -->
+    <div id="loader">
+      <div class="spinner"></div>
+      <p>Analizando combinación…</p>
+    </div>
+
+    <!-- ===== RESULTADOS ===== -->
+    <div id="results"></div>
+
+    <!-- ===== DISCLAIMER ROBUSTO ===== -->
+    <div class="disclaimer-box">
+      <div class="disclaimer-header">
+        <span style="font-size:1.1rem">🚨</span>
+        <strong>AVISO MÉDICO Y LEGAL IMPORTANTE — LEÉ ANTES DE USAR</strong>
+      </div>
+      <div class="disclaimer-body">
+        <p><strong>Esta herramienta NO es un dispositivo médico, NO constituye consejo médico y NO reemplaza bajo ninguna circunstancia la consulta con un médico, farmacéutico u otro profesional de la salud habilitado.</strong></p>
+        <p>La información presentada tiene carácter exclusivamente <strong>educativo e informativo</strong>. Está basada en literatura científica y fuentes públicas de referencia, pero puede estar incompleta, desactualizada o no aplicar a tu situación particular según tu historial, dosis, condiciones de salud preexistentes u otros medicamentos que estés tomando.</p>
+        <p>La ausencia de una interacción en esta base de datos <strong>no garantiza que la combinación sea segura</strong>. Siempre consultá con un profesional de la salud antes de iniciar, modificar o interrumpir cualquier suplemento o medicamento.</p>
+        <p>Los creadores y operadores de esta herramienta <strong>no asumen ninguna responsabilidad</strong> por decisiones tomadas en base a la información aquí presentada. El uso de esta herramienta implica la aceptación de estos términos.</p>
+      </div>
+    </div>
+
+    <!-- ===== ACERCA DE ESTA HERRAMIENTA ===== -->
+    <div class="about-section">
+      <button class="about-toggle" onclick="toggleSection('about')">
+        <span>ℹ️ &nbsp;Acerca de esta herramienta</span>
+        <span class="arrow" id="arrow-about">▼</span>
+      </button>
+      <div class="about-content" id="about-content">
+        <p><strong>¿Qué es esto?</strong><br>
+        "¿Puedo tomar esto con esto?" es una herramienta educativa gratuita que permite consultar posibles interacciones entre suplementos, vitaminas y medicamentos de uso común. Fue creada con la intención de brindar información accesible al público general.</p>
+
+        <p><strong>¿Cómo funciona?</strong><br>
+        La herramienta compara las sustancias ingresadas contra una base de datos de interacciones construida a partir de literatura científica pública, incluyendo estudios publicados en PubMed, guías de organismos de salud internacionales (FDA, EMA, ANMAT) y bases de referencia farmacológica como Drugs.com y MedlinePlus.</p>
+
+        <p><strong>Limitaciones</strong><br>
+        La base de datos es limitada y no cubre todas las sustancias ni todas las combinaciones posibles. Los efectos de una interacción dependen de factores individuales como la dosis, el peso corporal, la edad, el estado de salud y la genética de cada persona. Esta herramienta no tiene en cuenta esos factores.</p>
+
+        <p><strong>¿Quién la creó?</strong><br>
+        Esta herramienta fue desarrollada por un particular como proyecto de divulgación de salud pública, sin fines de lucro en su origen. No está afiliada a ninguna empresa farmacéutica, laboratorio ni institución médica.</p>
+
+        <p><strong>Actualizaciones</strong><br>
+        La base de datos se actualiza periódicamente, pero no en tiempo real. Para información actualizada sobre interacciones específicas, consultá directamente con tu médico o farmacéutico.</p>
+      </div>
+    </div>
+
+    <!-- ===== FUENTES Y REFERENCIAS ===== -->
+    <div class="sources-section">
+      <button class="about-toggle" onclick="toggleSection('sources')">
+        <span>📚 &nbsp;Fuentes y referencias</span>
+        <span class="arrow" id="arrow-sources">▼</span>
+      </button>
+      <div class="sources-content" id="sources-content">
+
+        <div class="source-item">
+          <strong>PubMed / National Library of Medicine (NIH)</strong>
+          Base de datos de literatura científica biomédica. Fuente principal para evidencia sobre interacciones farmacológicas y de suplementos.
+          <a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank" rel="noopener">pubmed.ncbi.nlm.nih.gov</a>
+        </div>
+
+        <div class="source-item">
+          <strong>Drugs.com — Drug Interactions Checker</strong>
+          Base de referencia farmacológica profesional con información sobre interacciones medicamentosas y con suplementos.
+          <a href="https://www.drugs.com/drug_interactions.html" target="_blank" rel="noopener">drugs.com/drug_interactions.html</a>
+        </div>
+
+        <div class="source-item">
+          <strong>MedlinePlus — U.S. National Library of Medicine</strong>
+          Información confiable sobre medicamentos, suplementos y su uso seguro, dirigida al público general.
+          <a href="https://medlineplus.gov" target="_blank" rel="noopener">medlineplus.gov</a>
+        </div>
+
+        <div class="source-item">
+          <strong>Office of Dietary Supplements (NIH)</strong>
+          Fichas informativas sobre suplementos dietéticos, incluyendo interacciones conocidas y niveles de evidencia.
+          <a href="https://ods.od.nih.gov" target="_blank" rel="noopener">ods.od.nih.gov</a>
+        </div>
+
+        <div class="source-item">
+          <strong>Examine.com</strong>
+          Base de datos independiente de suplementos con análisis de estudios científicos y evidencia de interacciones.
+          <a href="https://examine.com" target="_blank" rel="noopener">examine.com</a>
+        </div>
+
+        <div class="source-item">
+          <strong>ANMAT — Administración Nacional de Medicamentos (Argentina)</strong>
+          Organismo regulador nacional. Referencia para información sobre medicamentos aprobados en Argentina.
+          <a href="https://www.argentina.gob.ar/anmat" target="_blank" rel="noopener">argentina.gob.ar/anmat</a>
+        </div>
+
+        <div class="source-item">
+          <strong>European Medicines Agency (EMA)</strong>
+          Agencia europea de medicamentos. Fuente de monografías y alertas de seguridad farmacológica.
+          <a href="https://www.ema.europa.eu" target="_blank" rel="noopener">ema.europa.eu</a>
+        </div>
+
+        <p style="margin-top:16px; font-size:.78rem; color:var(--muted);">
+          La información de esta base de datos es de carácter general y fue compilada a partir de las fuentes citadas. Cada interacción incluye un nivel de evidencia (alto / medio / bajo) que refleja la solidez de la literatura disponible al momento de su inclusión.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="site-footer">
+      <p>Herramienta educativa gratuita · No reemplaza la consulta médica</p>
+      <p>La información puede estar incompleta. Consultá siempre con un profesional de la salud.</p>
+    </div>
+
+  </main>
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+  <script>
+
+    // =====================================================
+    // BASE DE DATOS DE INTERACCIONES
+    // Cada entrada define el par de sustancias, la interacción
+    // conocida, efectos adversos, recomendación de timing y
+    // nivel de evidencia (alto / medio / bajo).
+    // =====================================================
+    const INTERACTIONS_DB = [
+
+      // — CAFEÍNA + CREATINA —
+      {
+        substances: ['cafeína', 'creatina'],
+        risk: 'caution',
+        title: 'Posible reducción del efecto ergogénico',
+        interaction: 'Estudios iniciales sugirieron que la cafeína podría inhibir la captación muscular de creatina. La evidencia actual es mixta: algunos ensayos no hallan interferencia significativa.',
+        adverse: 'Potencial disminución del beneficio de la creatina en rendimiento de alta intensidad. Puede aumentar calambres musculares en algunos individuos.',
+        timing: 'Si querés maximizar los beneficios de la creatina, considerá separar la toma de cafeína al menos 1–2 horas antes del entrenamiento.',
+        evidence: 'medio'
+      },
+
+      // — MELATONINA + SERTRALINA —
+      {
+        substances: ['melatonina', 'sertralina'],
+        risk: 'danger',
+        title: 'Riesgo de síndrome serotoninérgico leve',
+        interaction: 'La sertralina (ISRS) puede aumentar los niveles de melatonina endógena. Combinarlos eleva el riesgo de efectos aditivos sobre el SNC.',
+        adverse: 'Somnolencia excesiva, confusión, posible alteración del ciclo circadiano. En dosis altas, riesgo bajo de síntomas serotoninérgicos.',
+        timing: 'Solo bajo supervisión médica. Si se indica, usar la dosis mínima de melatonina (0.5–1 mg) y no combinar con alcohol.',
+        evidence: 'alto'
+      },
+
+      // — IBUPROFENO + PARACETAMOL —
+      {
+        substances: ['ibuprofeno', 'paracetamol'],
+        risk: 'caution',
+        title: 'Combinación generalmente segura en dosis terapéuticas',
+        interaction: 'Mecanismos de acción diferentes (AINE vs. analgésico central). Ampliamente usados en combinación para dolor moderado.',
+        adverse: 'Con uso prolongado: riesgo gastrointestinal (ibuprofeno) y hepático (paracetamol). Evitar alcohol con paracetamol.',
+        timing: 'Podés alternarlos cada 4–6 horas. No superar las dosis máximas diarias: ibuprofeno 1200 mg (uso libre), paracetamol 4 g. Tomar ibuprofeno con comida.',
+        evidence: 'alto'
+      },
+
+      // — MAGNESIO + VITAMINA D —
+      {
+        substances: ['magnesio', 'vitamina d'],
+        risk: 'safe',
+        title: 'Sinergia beneficiosa',
+        interaction: 'El magnesio es cofactor esencial para la conversión de vitamina D a su forma activa. Una deficiencia de magnesio puede hacer ineficaz la suplementación con vitamina D.',
+        adverse: 'Sin efectos adversos conocidos en dosis recomendadas. El exceso de magnesio puede causar diarrea.',
+        timing: 'Tomarlos juntos o en la misma comida potencia los efectos. La vitamina D se absorbe mejor con grasa alimentaria.',
+        evidence: 'medio'
+      },
+
+      // — ZINC + MAGNESIO —
+      {
+        substances: ['zinc', 'magnesio'],
+        risk: 'caution',
+        title: 'Competición por absorción intestinal',
+        interaction: 'En dosis altas, el zinc puede inhibir la absorción de magnesio y viceversa al competir por los mismos transportadores intestinales.',
+        adverse: 'Con suplementación excesiva de zinc (>40 mg/día): déficit crónico de cobre y posible alteración de la absorción de magnesio.',
+        timing: 'Si tomás dosis altas de ambos, separalos al menos 2 horas. En dosis estándar (zinc ≤15 mg, magnesio ≤400 mg) la interacción es mínima.',
+        evidence: 'medio'
+      },
+
+      // — OMEGA 3 + IBUPROFENO —
+      {
+        substances: ['omega3', 'ibuprofeno'],
+        risk: 'caution',
+        title: 'Efecto anticoagulante aditivo',
+        interaction: 'Ambos tienen propiedades anticoagulantes / antiagregantes plaquetarias. El omega-3 en dosis altas (≥3 g/día) puede potenciar el efecto del ibuprofeno.',
+        adverse: 'Mayor tiempo de sangrado, riesgo aumentado de hematomas. Relevante en personas que van a cirugía o tienen trastornos de coagulación.',
+        timing: 'En dosis habituales (1–2 g omega-3 + ibuprofeno ocasional) el riesgo es bajo. Suspender omega-3 5–7 días antes de una cirugía.',
+        evidence: 'medio'
+      },
+
+      // — ZINC + VITAMINA D —
+      {
+        substances: ['zinc', 'vitamina d'],
+        risk: 'safe',
+        title: 'Combinación compatible y sinérgica',
+        interaction: 'El zinc y la vitamina D trabajan juntos en el sistema inmune y no presentan interacciones adversas conocidas.',
+        adverse: 'Ninguno en dosis estándar. El exceso de zinc a largo plazo puede deplecionar cobre.',
+        timing: 'Se pueden tomar juntos. Ambos se absorben mejor acompañados de comida.',
+        evidence: 'bajo'
+      },
+
+      // — CAFEÍNA + MELATONINA —
+      {
+        substances: ['cafeína', 'melatonina'],
+        risk: 'danger',
+        title: 'Efectos opuestos que se anulan mutuamente',
+        interaction: 'La cafeína es estimulante y bloquea receptores de adenosina; la melatonina es inductora del sueño. Se antagonizan directamente.',
+        adverse: 'La cafeína puede inhibir completamente el efecto de la melatonina y alterar el ritmo circadiano. Consumo nocturno de cafeína reduce la secreción natural de melatonina.',
+        timing: 'No los combines. La última ingesta de cafeína debería ocurrir al menos 6–8 horas antes de tomar melatonina para dormir.',
+        evidence: 'alto'
+      },
+
+      // — CREATINA + MAGNESIO —
+      {
+        substances: ['creatina', 'magnesio'],
+        risk: 'safe',
+        title: 'Combinación complementaria',
+        interaction: 'El magnesio participa en la síntesis de ATP y puede potenciar ligeramente la eficiencia del sistema creatina-fosfato.',
+        adverse: 'Sin interacciones adversas conocidas. El exceso de magnesio puede causar efecto laxante.',
+        timing: 'Pueden tomarse juntos, idealmente cerca del entrenamiento.',
+        evidence: 'bajo'
+      },
+
+      // — SERTRALINA + OMEGA 3 —
+      {
+        substances: ['sertralina', 'omega3'],
+        risk: 'safe',
+        title: 'Posible sinergia antidepresiva',
+        interaction: 'Estudios sugieren que el omega-3 (especialmente EPA) puede potenciar los efectos de los antidepresivos ISRS. Algunos protocolos clínicos los combinan.',
+        adverse: 'Leve aumento del efecto anticoagulante (relevante en dosis altas de omega-3). Monitorear si hay síntomas de sangrado.',
+        timing: 'Combinación generalmente considerada segura y potencialmente beneficiosa bajo supervisión médica.',
+        evidence: 'medio'
+      },
+
+      // — PARACETAMOL + MAGNESIO —
+      {
+        substances: ['paracetamol', 'magnesio'],
+        risk: 'safe',
+        title: 'Sin interacciones significativas',
+        interaction: 'No se han documentado interacciones farmacológicas relevantes entre paracetamol y suplementos de magnesio.',
+        adverse: 'Ninguno relevante en dosis estándar.',
+        timing: 'Pueden tomarse juntos. Tomar el paracetamol con agua abundante.',
+        evidence: 'bajo'
+      },
+
+      // — VITAMINA D + OMEGA 3 —
+      {
+        substances: ['vitamina d', 'omega3'],
+        risk: 'safe',
+        title: 'Combinación compatible y recomendada',
+        interaction: 'Ambas son sustancias liposolubles y se absorben mejor en presencia de grasas. No hay interacciones adversas conocidas.',
+        adverse: 'Ninguno. El omega-3 puede mejorar levemente la biodisponibilidad de la vitamina D.',
+        timing: 'Tomarlos juntos con una comida que contenga grasa es la forma más eficiente.',
+        evidence: 'bajo'
+      },
+
+    ];
+
+    // =====================================================
+    // LISTA DE SUSTANCIAS CONOCIDAS (para autocomplete)
+    // =====================================================
+    const KNOWN_SUBSTANCES = [
+      'creatina', 'cafeína', 'magnesio', 'omega3', 'melatonina',
+      'ibuprofeno', 'paracetamol', 'sertralina', 'vitamina d', 'zinc',
+      'aspirina', 'vitamina c', 'hierro', 'calcio', 'proteína de suero',
+      'bcaa', 'glutamina', 'vitamina b12', 'ácido fólico', 'coenzima q10',
+    ];
+
+    // =====================================================
+    // ESTADO DE LA APP
+    // =====================================================
+    let selectedTags = [];   // Array de sustancias ingresadas
+    let activeSuggIndex = -1; // Índice activo en autocomplete
+
+    // =====================================================
+    // REFERENCIAS AL DOM
+    // =====================================================
+    const tagContainer  = document.getElementById('tag-container');
+    const tagInput      = document.getElementById('tag-input');
+    const suggestionsEl = document.getElementById('suggestions');
+    const btnAnalyze    = document.getElementById('btn-analyze');
+    const loaderEl      = document.getElementById('loader');
+    const resultsEl     = document.getElementById('results');
+
+    // =====================================================
+    // NORMALIZACIÓN DE TEXTO
+    // Convierte a minúsculas y elimina acentos para comparar
+    // =====================================================
+    function normalize(str) {
+      return str.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    }
+
+    // =====================================================
+    // AGREGAR UN CHIP (TAG) AL CONTENEDOR
+    // =====================================================
+    function addTag(value) {
+      const clean = value.trim();
+      if (!clean) return;
+
+      const norm = normalize(clean);
+
+      // Evitar duplicados
+      if (selectedTags.map(normalize).includes(norm)) {
+        tagInput.value = '';
+        hideSuggestions();
+        return;
+      }
+
+      selectedTags.push(clean);
+
+      // Crear elemento chip
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.innerHTML = `${clean} <button onclick="removeTag('${clean}')" title="Quitar">×</button>`;
+      tagContainer.insertBefore(tag, tagInput);
+
+      tagInput.value = '';
+      hideSuggestions();
+      updateButtonState();
+    }
+
+    // =====================================================
+    // ELIMINAR UN CHIP
+    // =====================================================
+    function removeTag(value) {
+      selectedTags = selectedTags.filter(t => t !== value);
+
+      // Reconstruir chips en el DOM
+      const existingTags = tagContainer.querySelectorAll('.tag');
+      existingTags.forEach(t => t.remove());
+
+      selectedTags.forEach(s => {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.innerHTML = `${s} <button onclick="removeTag('${s}')" title="Quitar">×</button>`;
+        tagContainer.insertBefore(tag, tagInput);
+      });
+
+      updateButtonState();
+    }
+
+    // =====================================================
+    // HABILITAR / DESHABILITAR BOTÓN
+    // =====================================================
+    function updateButtonState() {
+      btnAnalyze.disabled = selectedTags.length < 2;
+    }
+
+    // =====================================================
+    // AUTOCOMPLETADO
+    // =====================================================
+    tagInput.addEventListener('input', () => {
+      const val = normalize(tagInput.value);
+      if (!val) { hideSuggestions(); return; }
+
+      const matches = KNOWN_SUBSTANCES.filter(s => normalize(s).includes(val) && !selectedTags.map(normalize).includes(normalize(s)));
+
+      if (matches.length === 0) { hideSuggestions(); return; }
+
+      activeSuggIndex = -1;
+      suggestionsEl.innerHTML = matches.slice(0, 6).map((m, i) =>
+        `<div class="suggestion-item" data-index="${i}" onmousedown="addTag('${m}')">${m}</div>`
+      ).join('');
+      suggestionsEl.classList.add('visible');
+    });
+
+    // Navegación con teclado en el autocomplete
+    tagInput.addEventListener('keydown', e => {
+      const items = suggestionsEl.querySelectorAll('.suggestion-item');
+
+      if (e.key === 'ArrowDown') {
+        activeSuggIndex = Math.min(activeSuggIndex + 1, items.length - 1);
+        items.forEach((el, i) => el.classList.toggle('active', i === activeSuggIndex));
+        e.preventDefault();
+      } else if (e.key === 'ArrowUp') {
+        activeSuggIndex = Math.max(activeSuggIndex - 1, -1);
+        items.forEach((el, i) => el.classList.toggle('active', i === activeSuggIndex));
+        e.preventDefault();
+      } else if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        if (activeSuggIndex >= 0 && items[activeSuggIndex]) {
+          addTag(items[activeSuggIndex].textContent);
+        } else {
+          addTag(tagInput.value);
+        }
+      } else if (e.key === 'Backspace' && tagInput.value === '' && selectedTags.length > 0) {
+        removeTag(selectedTags[selectedTags.length - 1]);
+      }
+    });
+
+    document.addEventListener('click', e => {
+      if (!tagContainer.contains(e.target)) hideSuggestions();
+    });
+
+    function hideSuggestions() {
+      suggestionsEl.classList.remove('visible');
+      suggestionsEl.innerHTML = '';
+      activeSuggIndex = -1;
+    }
+
+    // =====================================================
+    // CARGAR EJEMPLO RÁPIDO
+    // =====================================================
+    function loadExample(substances) {
+      // Limpiar estado actual
+      selectedTags = [];
+      tagContainer.querySelectorAll('.tag').forEach(t => t.remove());
+      resultsEl.style.display = 'none';
+
+      substances.forEach(s => addTag(s));
+      resultsEl.style.display = 'none';
+    }
+
+    // =====================================================
+    // BUSCAR INTERACCIONES ENTRE DOS SUSTANCIAS
+    // =====================================================
+    function findInteraction(a, b) {
+      const na = normalize(a);
+      const nb = normalize(b);
+
+      return INTERACTIONS_DB.find(entry => {
+        const s0 = normalize(entry.substances[0]);
+        const s1 = normalize(entry.substances[1]);
+        return (s0 === na && s1 === nb) || (s0 === nb && s1 === na);
+      });
+    }
+
+    // =====================================================
+    // ANÁLISIS PRINCIPAL
+    // Genera todos los pares posibles y busca interacciones
+    // =====================================================
+    function analyzeInteractions() {
+      if (selectedTags.length < 2) return;
+
+      // Ocultar resultados previos y mostrar loader
+      resultsEl.style.display  = 'none';
+      loaderEl.style.display   = 'block';
+      btnAnalyze.disabled      = true;
+
+      // Simular un breve delay para sensación de análisis real
+      setTimeout(() => {
+        loaderEl.style.display = 'none';
+        btnAnalyze.disabled    = false;
+        renderResults();
+      }, 900);
+    }
+
+    // =====================================================
+    // RENDERIZAR RESULTADOS
+    // =====================================================
+    function renderResults() {
+      const pairs = [];
+      const found = [];
+
+      // Generar todos los pares únicos (combinatoria sin repetición)
+      for (let i = 0; i < selectedTags.length; i++) {
+        for (let j = i + 1; j < selectedTags.length; j++) {
+          pairs.push([selectedTags[i], selectedTags[j]]);
+        }
+      }
+
+      pairs.forEach(([a, b]) => {
+        const interaction = findInteraction(a, b);
+        found.push({ a, b, interaction });
+      });
+
+      // Determinar nivel de riesgo global
+      const hasDanger  = found.some(f => f.interaction?.risk === 'danger');
+      const hasCaution = found.some(f => f.interaction?.risk === 'caution');
+
+      let summaryClass, summaryIcon, summaryTitle, summaryDesc;
+
+      if (hasDanger) {
+        summaryClass = 'danger';
+        summaryIcon  = '⚠️';
+        summaryTitle = 'Se detectaron interacciones importantes';
+        summaryDesc  = 'Al menos una combinación presenta un riesgo relevante. Consultá con un profesional antes de combinar estas sustancias.';
+      } else if (hasCaution) {
+        summaryClass = 'caution';
+        summaryIcon  = '🟡';
+        summaryTitle = 'Combinación con precauciones';
+        summaryDesc  = 'Existen interacciones menores que requieren atención. Seguí las recomendaciones de timing.';
+      } else {
+        summaryClass = 'safe';
+        summaryIcon  = '✅';
+        summaryTitle = 'Combinación generalmente segura';
+        summaryDesc  = 'No se detectaron interacciones adversas importantes entre las sustancias ingresadas.';
+      }
+
+      // Construir HTML
+      let html = `
+        <div class="result-summary ${summaryClass}">
+          <div class="summary-icon">${summaryIcon}</div>
+          <div class="summary-text">
+            <h2>${summaryTitle}</h2>
+            <p>${summaryDesc}</p>
+          </div>
+        </div>
+      `;
+
+      // Tarjetas por par
+      found.forEach(({ a, b, interaction }) => {
+        const risk  = interaction?.risk || 'safe';
+        const badge = { danger: '⚠️ Alto', caution: '🟡 Medio', safe: '✅ Bajo' }[risk];
+        const dotClass = risk;
+
+        if (interaction) {
+          html += `
+            <div class="interaction-card">
+              <div class="interaction-header">
+                <div class="interaction-pair">
+                  <span class="risk-dot ${dotClass}"></span>
+                  <span>${capitalize(a)}</span>
+                  <span style="color:var(--muted)">+</span>
+                  <span>${capitalize(b)}</span>
+                </div>
+                <span class="badge-evidence ${interaction.evidence}">${interaction.evidence === 'alto' ? 'Evidencia alta' : interaction.evidence === 'medio' ? 'Evidencia media' : 'Evidencia baja'}</span>
+              </div>
+
+              <div class="detail-section">
+                <div class="detail-label">🔗 Interacción conocida</div>
+                <div class="detail-text">${interaction.interaction}</div>
+              </div>
+
+              <div class="detail-section">
+                <div class="detail-label">⚡ Posibles efectos adversos</div>
+                <div class="detail-text">${interaction.adverse}</div>
+              </div>
+
+              <div class="detail-section">
+                <div class="detail-label">⏱ Recomendación de timing</div>
+                <div class="detail-text">${interaction.timing}</div>
+              </div>
+            </div>
+          `;
+        } else {
+          // Par sin datos en la base
+          html += `
+            <div class="interaction-card">
+              <div class="interaction-header">
+                <div class="interaction-pair">
+                  <span class="risk-dot safe"></span>
+                  <span>${capitalize(a)}</span>
+                  <span style="color:var(--muted)">+</span>
+                  <span>${capitalize(b)}</span>
+                </div>
+                <span class="badge-evidence bajo">Sin datos</span>
+              </div>
+              <div class="detail-section">
+                <div class="detail-text" style="color:var(--muted)">
+                  No hay datos registrados sobre la interacción entre <strong>${a}</strong> y <strong>${b}</strong>
+                  en nuestra base. Eso no significa que sea segura; consultá con un profesional.
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      resultsEl.innerHTML = html;
+      resultsEl.style.display = 'block';
+
+      // Scroll suave hacia los resultados
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // =====================================================
+    // HELPER: Capitalizar primer letra
+    // =====================================================
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // =====================================================
+    // TOGGLE SECCIONES COLAPSABLES (Acerca de / Fuentes)
+    // =====================================================
+    function toggleSection(id) {
+      const content = document.getElementById(id + '-content');
+      const arrow   = document.getElementById('arrow-' + id);
+      const btn     = arrow.closest('.about-toggle');
+
+      const isOpen = content.classList.contains('visible');
+      content.classList.toggle('visible', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+    }
+
+  </script>
+
+</body>
+</html>
