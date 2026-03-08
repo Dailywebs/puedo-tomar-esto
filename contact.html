@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto — ¿Puedo tomar esto con esto?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #F5F2ED;
+      --surface:   #FFFFFF;
+      --border:    #E2DDD6;
+      --text:      #1A1714;
+      --muted:     #7A746C;
+      --accent:    #2D5A4E;
+      --accent-lt: #E8F0EE;
+      --radius:    14px;
+      --shadow:    0 4px 24px rgba(26,23,20,.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+    header {
+      background: var(--accent);
+      padding: 40px 24px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse 70% 60% at 80% 30%, rgba(255,255,255,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: #fff;
+      position: relative;
+    }
+    header p {
+      margin-top: 8px;
+      font-size: .9rem;
+      color: rgba(255,255,255,.7);
+      position: relative;
+    }
+    header a {
+      color: #A8CBBF;
+      text-decoration: none;
+      font-size: .85rem;
+      display: inline-block;
+      margin-top: 12px;
+      position: relative;
+    }
+    header a:hover { text-decoration: underline; }
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 36px 32px;
+      margin-top: -24px;
+      border: 1px solid var(--border);
+    }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin: 28px 0 10px;
+    }
+    h2:first-child { margin-top: 0; }
+    p {
+      font-size: .9rem;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    p strong { color: var(--text); }
+
+    /* Contacto principal */
+    .contact-main {
+      background: var(--accent);
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      margin: 24px 0;
+    }
+    .contact-main p {
+      color: rgba(255,255,255,.8);
+      margin-bottom: 8px;
+    }
+    .contact-main a {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    .contact-main a:hover { text-decoration: underline; }
+
+    /* Motivos de contacto */
+    .reason-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .reason-item {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .reason-item strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+      font-size: .9rem;
+    }
+
+    /* Aviso */
+    .warning-box {
+      background: #fdf2f2;
+      border: 1.5px solid #e2c9c9;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 24px;
+    }
+    .warning-box p { color: #8B2020; margin: 0; font-size: .85rem; line-height: 1.6; }
+
+    .site-footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .site-footer a { color: var(--accent); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .card { padding: 24px 16px; }
+      .reason-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Contacto</h1>
+    <p>¿Puedo tomar esto con esto?</p>
+    <a href="index.html">← Volver a la herramienta</a>
+  </header>
+
+  <main>
+    <div class="card">
+
+      <h2>Escribinos</h2>
+      <p>Somos un proyecto independiente. Respondemos consultas relacionadas con el funcionamiento de la herramienta, sugerencias de mejora y reportes de errores.</p>
+
+      <div class="contact-main">
+        <p>📧 Email de contacto</p>
+        <a href="mailto:puedetomaresteconesto@gmail.com">puedetomaresteconesto@gmail.com</a>
+      </div>
+
+      <h2>¿Para qué podés escribirnos?</h2>
+      <div class="reason-grid">
+        <div class="reason-item">
+          <strong>🐛 Reportar un error</strong>
+          Si encontrás información incorrecta o un bug en la herramienta.
+        </div>
+        <div class="reason-item">
+          <strong>💡 Sugerir una interacción</strong>
+          Si querés que agreguemos una sustancia o combinación a la base de datos.
+        </div>
+        <div class="reason-item">
+          <strong>🤝 Colaboraciones</strong>
+          Si sos profesional de la salud y querés contribuir con información verificada.
+        </div>
+        <div class="reason-item">
+          <strong>📋 Consultas legales</strong>
+          Preguntas sobre privacidad, términos de uso o derechos de autor.
+        </div>
+      </div>
+
+      <h2>Tiempo de respuesta</h2>
+      <p>Intentamos responder en un plazo de <strong>48 a 72 horas hábiles</strong>. Al ser un proyecto independiente sin equipo dedicado, pueden existir demoras en períodos de alta demanda.</p>
+
+      <div class="warning-box">
+        <p>⚠️ <strong>Importante:</strong> No podemos responder consultas médicas personales ni reemplazar el consejo de un profesional de la salud. Si tenés dudas sobre tu salud, consultá con tu médico o farmacéutico.</p>
+      </div>
+
+    </div>
+
+    <div class="site-footer">
+      <p><a href="index.html">Herramienta</a> · <a href="privacy.html">Privacidad</a> · <a href="terms.html">Términos</a> · <a href="contact.html">Contacto</a></p>
+      <p style="margin-top:6px">Herramienta educativa gratuita · No reemplaza la consulta médica</p>
+    </div>
+  </main>
+
+</body>
+</html>

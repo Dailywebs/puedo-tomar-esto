@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Términos de Uso — ¿Puedo tomar esto con esto?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #F5F2ED;
+      --surface:   #FFFFFF;
+      --border:    #E2DDD6;
+      --text:      #1A1714;
+      --muted:     #7A746C;
+      --accent:    #2D5A4E;
+      --accent-lt: #E8F0EE;
+      --radius:    14px;
+      --shadow:    0 4px 24px rgba(26,23,20,.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+    header {
+      background: var(--accent);
+      padding: 40px 24px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse 70% 60% at 80% 30%, rgba(255,255,255,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: #fff;
+      position: relative;
+    }
+    header p {
+      margin-top: 8px;
+      font-size: .9rem;
+      color: rgba(255,255,255,.7);
+      position: relative;
+    }
+    header a {
+      color: #A8CBBF;
+      text-decoration: none;
+      font-size: .85rem;
+      display: inline-block;
+      margin-top: 12px;
+      position: relative;
+    }
+    header a:hover { text-decoration: underline; }
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 36px 32px;
+      margin-top: -24px;
+      border: 1px solid var(--border);
+    }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin: 28px 0 10px;
+    }
+    h2:first-child { margin-top: 0; }
+    p {
+      font-size: .9rem;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    p strong { color: var(--text); }
+    ul {
+      margin: 8px 0 12px 20px;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .updated {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1.5px solid var(--border);
+    }
+    .warning-box {
+      background: #fdf2f2;
+      border: 1.5px solid #e2c9c9;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .warning-box p { color: #8B2020; margin: 0; font-size: .85rem; }
+    .contact-box {
+      background: var(--accent-lt);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 24px;
+    }
+    .contact-box p { color: var(--accent); margin: 0; }
+    .contact-box a { color: var(--accent); font-weight: 600; }
+    .site-footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .site-footer a { color: var(--accent); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+    @media (max-width: 480px) {
+      .card { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Términos de Uso</h1>
+    <p>¿Puedo tomar esto con esto?</p>
+    <a href="index.html">← Volver a la herramienta</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <p class="updated">Última actualización: marzo de 2026</p>
+
+      <h2>1. Aceptación de los términos</h2>
+      <p>Al acceder y utilizar este sitio web (<strong>"¿Puedo tomar esto con esto?"</strong>), aceptás cumplir con estos Términos de Uso. Si no estás de acuerdo con alguno de estos términos, te pedimos que no utilices este sitio.</p>
+
+      <h2>2. Naturaleza del servicio</h2>
+      <p>Este sitio es una <strong>herramienta educativa e informativa gratuita</strong>. Su único propósito es brindar información general sobre posibles interacciones entre suplementos, vitaminas y medicamentos de uso común, basada en literatura científica pública.</p>
+
+      <div class="warning-box">
+        <p>⚠️ <strong>Este sitio NO es un servicio médico, NO emite diagnósticos, NO prescribe tratamientos y NO reemplaza bajo ninguna circunstancia la consulta con un profesional de la salud habilitado.</strong></p>
+      </div>
+
+      <h2>3. Limitación de responsabilidad</h2>
+      <p>El operador de este sitio <strong>no asume ninguna responsabilidad</strong> por:</p>
+      <ul>
+        <li>Decisiones de salud tomadas en base a la información aquí presentada.</li>
+        <li>Daños directos, indirectos o consecuentes derivados del uso de esta herramienta.</li>
+        <li>Inexactitudes, omisiones o desactualizaciones en la base de datos de interacciones.</li>
+        <li>Interacciones no contempladas en la base de datos.</li>
+        <li>Efectos individuales que puedan variar según cada persona.</li>
+      </ul>
+      <p>La información presentada puede estar incompleta o no aplicar a tu situación particular. <strong>Siempre consultá con tu médico o farmacéutico antes de combinar cualquier sustancia.</strong></p>
+
+      <h2>4. Uso permitido</h2>
+      <p>Este sitio está destinado a:</p>
+      <ul>
+        <li>Uso personal e informativo.</li>
+        <li>Consulta educativa general.</li>
+        <li>Punto de partida para conversaciones con profesionales de la salud.</li>
+      </ul>
+      <p>Queda <strong>prohibido</strong> usar este sitio para:</p>
+      <ul>
+        <li>Tomar decisiones médicas sin supervisión profesional.</li>
+        <li>Redistribuir la información como consejo médico profesional.</li>
+        <li>Cualquier uso comercial sin autorización expresa.</li>
+      </ul>
+
+      <h2>5. Exactitud de la información</h2>
+      <p>Hacemos nuestro mejor esfuerzo para mantener la información actualizada y precisa, basándonos en fuentes científicas reconocidas (PubMed, NIH, Drugs.com, entre otras). Sin embargo, <strong>no garantizamos la exactitud, completitud ni vigencia</strong> de la información presentada.</p>
+      <p>La ciencia médica evoluciona constantemente. Lo que hoy se considera seguro puede cambiar en base a nuevas investigaciones.</p>
+
+      <h2>6. Links de afiliados</h2>
+      <p>Este sitio puede contener links de afiliados a tiendas de suplementos. Esto significa que podríamos recibir una comisión si realizás una compra a través de esos links, <strong>sin costo adicional para vos</strong>. Estos links siempre estarán claramente identificados.</p>
+
+      <h2>7. Propiedad intelectual</h2>
+      <p>El diseño, código y contenido de este sitio son propiedad del operador independiente. Podés compartir el link del sitio libremente. No podés copiar ni redistribuir el código o contenido sin autorización.</p>
+
+      <h2>8. Modificaciones</h2>
+      <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entran en vigencia al ser publicados en esta página. El uso continuado del sitio implica la aceptación de los nuevos términos.</p>
+
+      <h2>9. Contacto</h2>
+      <p>Para consultas sobre estos términos, escribinos a:</p>
+      <div class="contact-box">
+        <p>📧 <a href="mailto:puedetomaresteconesto@gmail.com">puedetomaresteconesto@gmail.com</a></p>
+      </div>
+    </div>
+
+    <div class="site-footer">
+      <p><a href="index.html">Herramienta</a> · <a href="privacy.html">Privacidad</a> · <a href="terms.html">Términos</a> · <a href="contact.html">Contacto</a></p>
+      <p style="margin-top:6px">Herramienta educativa gratuita · No reemplaza la consulta médica</p>
+    </div>
+  </main>
+
+</body>
+</html>
